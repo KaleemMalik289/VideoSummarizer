@@ -1,5 +1,29 @@
-node_modules
-dist
+# Frontend
+node_modules/
+dist/
 .env
+.env.local
 .DS_Store
-coverage
+coverage/
+.vscode/
+
+# Backend / Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+backend/venv/
+
+# Project Specific
+backend/models/
+backend/temp/
+backend/.env
+backend/ffmpeg.exe
+*.mp3
+*.mp4
+*.webm
+
+# Logs
+*.log

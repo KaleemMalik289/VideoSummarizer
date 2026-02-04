@@ -10,31 +10,54 @@ function App() {
   const [viewState, setViewState] = useState('input'); // 'input', 'processing', 'result'
   const [resultData, setResultData] = useState(null);
 
-  const handleSummarize = (data) => {
-    // In a real app, 'data' would be sent to a backend here.
-    // data = { type: 'youtube' | 'file', payload: url | File }
-    console.log('Summarizing:', data);
+  const [error, setError] = useState(null);
 
+  const handleSummarize = async (data) => {
     setViewState('processing');
+    setError(null);
+    setResultData(null);
 
-    // Simulate API delay
-    setTimeout(() => {
-      // Mock result
-      setResultData({
-        title: data.type === 'youtube'
-          ? "Analysis of YouTube Video: " + data.payload
-          : "Summary of Uploaded File: " + data.payload.name,
-        duration: "12:34",
-        summary: [
-          "The video discusses the core principles of the subject matter efficiently.",
-          "Key arguments are presented with supporting evidence from recent studies.",
-          "The speaker emphasizes the importance of practical application over theory.",
-          "Several case studies are analyzed to demonstrate the concepts in action.",
-          "Conclusion suggests a shift in industry standards is inevitable."
-        ]
+    const formData = new FormData();
+    if (data.type === 'youtube') {
+      formData.append('youtube_url', data.payload);
+    } else {
+      formData.append('file', data.payload);
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/summarize', {
+        method: 'POST',
+        body: formData,
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to generate summary');
+      }
+
+      const result = await response.json();
+
+      // Parse markdown summary into array for ResultsCard
+      // Backend returns string with ** ** for bolding. We can keep it or clean it.
+      // ResultsCard expects array of strings.
+      const summaryArray = result.summary
+        .split('\n')
+        .filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || line.trim().length > 0)
+        .map(line => line.replace(/^[\*\-]\s*/, '').trim()); // Remove list markers
+
+      setResultData({
+        title: result.title,
+        duration: "Analyzed", // Backend doesn't return duration yet
+        summary: summaryArray.length > 0 ? summaryArray : [result.summary]
+      });
+
       setViewState('result');
-    }, 4500); // 4.5s delay to show off the animation states
+    } catch (err) {
+      console.error("Summarization error:", err);
+      setError(err.message);
+      setViewState('input'); // Or stays in processing with error? Better to go back or show error.
+      alert(`Error: ${err.message}`); // Simple alert for now
+    }
   };
 
   const handleCancel = () => {
