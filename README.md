@@ -5,7 +5,7 @@ This repository contains the source code for the Video Summarizer application.
 ## Project Structure
 
 - **frontend/**: React.js application (Vite + Tailwind CSS).
-- **backend/**: (Coming Soon) Python/Node.js backend.
+- **backend/**:  Python/Node.js backend.
 
 ## Getting Started
 
@@ -36,4 +36,8 @@ This repository contains the source code for the Video Summarizer application.
     cd ..
     uvicorn backend.main:app --reload
     ```
-    Server running at `http://localhost:8000`.
+
+## Access the Application
+- **Frontend UI**: [http://localhost:5173](http://localhost:5173)
+- **Backend API**: [http://localhost:8000](http://localhost:8000)
+- **API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
