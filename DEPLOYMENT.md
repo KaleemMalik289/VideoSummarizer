@@ -34,6 +34,12 @@ git push origin main
 
 6.  Click **Create Web Service**.
 
+## Troubleshooting & Key Info
+### "Upgrade to enable more features" Warning
+You will see a warning about "Free instances spinning down" and "No persistent disks". **This is normal and okay!**
+*   **Spin Down:** After 15 minutes of inactivity, your app effectively "sleeps". The next person to visit will have to wait ~50 seconds for it to wake up. This is fine for a portfolio project.
+*   **Persistent Disks:** Our app deletes video files after processing (`backend/temp`), so we don't need permanent storage. The ephemeral disk is perfect for this.
+
 ## Step 3: Wait for Build
 Render will now:
 1.  Clone your repo.
