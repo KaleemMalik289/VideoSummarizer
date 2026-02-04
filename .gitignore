@@ -27,3 +27,4 @@ backend/ffmpeg.exe
 
 # Logs
 *.log
+*.md

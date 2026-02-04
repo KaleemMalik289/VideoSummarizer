@@ -33,11 +33,14 @@ COPY backend/requirements.txt ./backend/
 # Install backend dependencies
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
-# Copy backend source code
+# Copy backend source code including download script
 COPY backend/ ./backend/
 
 # Create temp directories
 RUN mkdir -p backend/temp backend/models
+
+# Pre-download Whisper model to bake it into the image
+RUN python backend/download_model.py
 
 # Expose the port
 EXPOSE 8000
