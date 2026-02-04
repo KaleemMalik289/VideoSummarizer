@@ -51,14 +51,14 @@ const InputSection = ({ onSummarize }) => {
         <div className="w-full max-w-4xl mx-auto">
             {/* Tabs */}
             <div className="flex justify-center mb-8">
-                <div className="inline-flex p-1 bg-gray-100 rounded-xl">
+                <div className="inline-flex p-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl">
                     <button
                         onClick={() => setActiveTab('youtube')}
                         className={twMerge(
                             "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
                             activeTab === 'youtube'
-                                ? "bg-white text-gray-900 shadow-sm ring-1 ring-black/5"
-                                : "text-gray-500 hover:text-gray-900"
+                                ? "bg-[var(--primary)] text-white shadow-sm"
+                                : "text-[var(--text-secondary)] hover:text-[var(--text-main)]"
                         )}
                     >
                         <Youtube className="w-4 h-4 mr-2" />
@@ -69,8 +69,8 @@ const InputSection = ({ onSummarize }) => {
                         className={twMerge(
                             "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
                             activeTab === 'file'
-                                ? "bg-white text-gray-900 shadow-sm ring-1 ring-black/5"
-                                : "text-gray-500 hover:text-gray-900"
+                                ? "bg-[var(--primary)] text-white shadow-sm"
+                                : "text-[var(--text-secondary)] hover:text-[var(--text-main)]"
                         )}
                     >
                         <Upload className="w-4 h-4 mr-2" />
@@ -80,16 +80,16 @@ const InputSection = ({ onSummarize }) => {
             </div>
 
             {/* Content */}
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+            <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border)] shadow-sm p-6 transition-colors duration-300">
                 {activeTab === 'youtube' ? (
                     <form onSubmit={handleSubmit} className="relative">
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--text-secondary)]">
                                 <LinkIcon className="h-5 w-5" />
                             </div>
                             <input
                                 type="url"
-                                className="block w-full pl-11 pr-32 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                                className="block w-full pl-11 pr-32 py-4 bg-[var(--bg-body)] border border-[var(--border)] rounded-xl text-[var(--text-main)] placeholder-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 focus:border-[var(--primary)] transition-all"
                                 placeholder="Paste YouTube Link (e.g. https://youtube.com/...)"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
@@ -98,7 +98,7 @@ const InputSection = ({ onSummarize }) => {
                             <button
                                 type="submit"
                                 disabled={!url}
-                                className="absolute right-2 top-2 bottom-2 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors flex items-center"
+                                className="absolute right-2 top-2 bottom-2 px-4 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors flex items-center"
                             >
                                 Summarize
                             </button>
@@ -111,9 +111,9 @@ const InputSection = ({ onSummarize }) => {
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
                             className={twMerge(
-                                "relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 cursor-pointer hover:bg-gray-50",
-                                isDragOver ? "border-indigo-500 bg-indigo-50/50" : "border-gray-200",
-                                file ? "bg-indigo-50/30 border-indigo-200" : ""
+                                "relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 cursor-pointer hover:bg-[var(--bg-body)]",
+                                isDragOver ? "border-[var(--primary)] bg-[var(--primary)]/5" : "border-[var(--border)]",
+                                file ? "bg-[var(--primary)]/5 border-[var(--primary)]/30" : ""
                             )}
                         >
                             <input
@@ -125,26 +125,26 @@ const InputSection = ({ onSummarize }) => {
                             <div className="space-y-2 pointer-events-none">
                                 <div className="flex justify-center">
                                     {file ? (
-                                        <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                                        <div className="h-12 w-12 bg-[var(--primary)]/10 rounded-full flex items-center justify-center text-[var(--primary)]">
                                             <FileVideo className="h-6 w-6" />
                                         </div>
                                     ) : (
-                                        <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
+                                        <div className="h-12 w-12 bg-[var(--bg-body)] rounded-full flex items-center justify-center text-[var(--text-secondary)] border border-[var(--border)]">
                                             <Upload className="h-6 w-6" />
                                         </div>
                                     )}
                                 </div>
                                 {file ? (
                                     <div>
-                                        <p className="text-sm font-medium text-gray-900">{file.name}</p>
-                                        <p className="text-xs text-gray-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                                        <p className="text-sm font-medium text-[var(--text-main)]">{file.name}</p>
+                                        <p className="text-xs text-[var(--text-secondary)]">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
                                     </div>
                                 ) : (
                                     <div>
-                                        <p className="text-sm font-medium text-gray-900">
+                                        <p className="text-sm font-medium text-[var(--text-main)]">
                                             Click to upload or drag and drop
                                         </p>
-                                        <p className="text-xs text-gray-500">MP4, MOV, or WEBM (max 500MB)</p>
+                                        <p className="text-xs text-[var(--text-secondary)]">MP4, MOV, or WEBM (max 500MB)</p>
                                     </div>
                                 )}
                             </div>
@@ -153,7 +153,7 @@ const InputSection = ({ onSummarize }) => {
                         <button
                             onClick={handleSubmit}
                             disabled={!file}
-                            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center"
+                            className="w-full py-3.5 bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center"
                         >
                             <span>Summarize Video</span>
                             <ArrowRight className="ml-2 w-4 h-4" />

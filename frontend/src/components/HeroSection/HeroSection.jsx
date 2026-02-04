@@ -40,14 +40,14 @@ const HeroSection = () => {
     return (
         <div className="mb-12 text-center">
             <div className="h-20 sm:h-24 lg:h-28 flex items-center justify-center mb-4">
-                <h1 className="text-xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight text-gray-900 whitespace-nowrap">
+                <h1 className="text-xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight text-[var(--text-main)] whitespace-nowrap">
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
                         {displayText}
                     </span>
                     <span className="animate-pulse text-indigo-600">|</span>
                 </h1>
             </div>
-            <p className="mx-auto max-w-2xl text-lg text-gray-500">
+            <p className="mx-auto max-w-2xl text-lg text-[var(--text-secondary)]">
                 Stop watching hours of footage. Get the key insights instantly with AI.
                 Paste a link or upload a file to get started.
             </p>
