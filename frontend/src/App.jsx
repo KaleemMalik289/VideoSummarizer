@@ -40,15 +40,10 @@ function App() {
       // Parse markdown summary into array for ResultsCard
       // Backend returns string with ** ** for bolding. We can keep it or clean it.
       // ResultsCard expects array of strings.
-      const summaryArray = result.summary
-        .split('\n')
-        .filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || line.trim().length > 0)
-        .map(line => line.replace(/^[\*\-]\s*/, '').trim()); // Remove list markers
-
       setResultData({
         title: result.title,
-        duration: "Analyzed", // Backend doesn't return duration yet
-        summary: summaryArray.length > 0 ? summaryArray : [result.summary]
+        duration: "Analyzed",
+        summary: result.summary // Pass raw text for component-level parsing
       });
 
       setViewState('result');
@@ -93,7 +88,7 @@ function App() {
           <div className="text-center animate-in fade-in slide-in-from-top-4 duration-500">
             <button
               onClick={handleReset}
-              className="text-indigo-600 hover:text-indigo-800 font-medium text-sm mb-4 inline-flex items-center"
+              className="inline-flex items-center px-8 py-3 text-lg font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-full transition-colors mb-6 shadow-sm border border-indigo-100"
             >
               &larr; Analyze Another Video
             </button>
