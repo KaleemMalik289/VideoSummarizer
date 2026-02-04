@@ -4,8 +4,8 @@ python-dotenv==1.0.1
 openai-whisper
 setuptools-rust
 
-groq
-yt-dlp==2023.12.30
+huggingface_hub
+yt-dlp
 moviepy==1.0.3
 python-multipart==0.0.9
 requests==2.31.0

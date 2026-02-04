@@ -1,7 +1,7 @@
 import os
 import shutil
 import whisper
-from groq import Groq
+from huggingface_hub import InferenceClient
 import imageio_ffmpeg
 from ..config import settings
 
@@ -46,43 +46,51 @@ class AIService:
     @staticmethod
     def generate_summary(transcript_text: str) -> str:
         """
-        Generates a summary using Groq (Llama3).
+        Generates a summary using Hugging Face Inference API.
         """
         try:
-            if not settings.GROQ_API_KEY:
-                raise Exception("GROQ_API_KEY is missing in environment variables.")
+            if not settings.HF_API_KEY:
+                raise Exception("HF_API_KEY is missing in environment variables.")
 
-            # llama3-70b-8192 is decommissioned. Using Llama 3.3 70B Versatile.
-            model = "llama-3.3-70b-versatile"
+            # Initializing client
+            client = InferenceClient(token=settings.HF_API_KEY)
 
-            # The "Golden" System Instruction
+            # The "Video Content Analyst" System Instruction
             system_instruction = (
-                "You are an expert Technical Video Analyst. Task: Analyze the provided transcript and generate a structured summary. "
-                "Output Rules: "
-                "1. Output strictly as a list of bullet points. "
-                "2. Each point must start with a bold concept title (e.g., **Concept:**). "
-                "3. Include specific numbers, tools, or technical terms mentioned. "
-                "4. Ignore conversational filler. "
-                "5. Keep it between 5 to 7 key points."
+                "You are an expert Video Content Analyst. Your task is to process the provided video transcript and generate a structured, professional summary.\n\n"
+                "**Input Context:**\n"
+                "You will receive a raw text transcript from a video. It may contain conversational filler words (e.g., \"um,\" \"uh\") or ASR errors.\n\n"
+                "**Processing Instructions:**\n"
+                "1. **Analyze** the transcript to understand the core message and specific technical details.\n"
+                "2. **Filter** out irrelevant digressions, self-corrections, and filler words.\n"
+                "3. **Synthesize** the information into two distinct sections: an Overview and Key Topics.\n\n"
+                "**Output Format (Strictly Follow This Structure):**\n\n"
+                "**1. Executive Overview:**\n"
+                "Write a concise paragraph summarizing the video's overall purpose and conclusion.\n\n"
+                "**2. Main Topics Discussed:**\n"
+                "Provide a list of bullet points discused in video. Each point must follow this format:\n"
+                "* **[Topic Name]:** [Detailed explanation of what was discussed regarding this topic. Include specific numbers, tools, or arguments mentioned.]\n\n"
+                "**Tone:**\n"
+                "Professional, objective, and concise. Avoid phrases like \"The speaker said...\"—instead, state the facts directly."
             )
 
-            prompt = f"{system_instruction}\n\nTranscript:\n{transcript_text}"
-            
-            completion = client.chat.completions.create(
-                model=model,
+            # Using standard HF Chat Completion
+            # We use Meta-Llama-3-8B-Instruct as it is the best general-purpose summarizer on free HF Inference
+            model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+
+            response = client.chat.completions.create(
+                model=model_id,
                 messages=[
-                    {"role": "user", "content": prompt}
+                    {"role": "system", "content": system_instruction},
+                    {"role": "user", "content": f"Transcript:\n{transcript_text}"}
                 ],
-                temperature=0.7,
                 max_tokens=1024,
-                top_p=1,
-                stop=None,
-                stream=False
+                temperature=0.7,
+                top_p=0.9
             )
 
-            return completion.choices[0].message.content
+            return response.choices[0].message.content
 
         except Exception as e:
-             # Simple error handling for Groq
-            print(f"Groq API Error: {str(e)}")
+            print(f"Hugging Face API Error: {str(e)}")
             raise Exception(f"Summarization failed: {str(e)}")

@@ -11,7 +11,7 @@ class Settings:
     
     # AI Keys
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY") # If using remote Whisper later
-    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY")
+    HF_API_KEY: str = os.getenv("HF_API_KEY")
     
     # Paths
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
