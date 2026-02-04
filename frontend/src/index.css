@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-color: #4F46E5;
+    --surface: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6B7280;
+    --border-color: #E5E7EB;
+    --bg-light: #F9FAFB;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+  }
+}
