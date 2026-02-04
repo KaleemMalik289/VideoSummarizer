@@ -1,31 +1,41 @@
 import os
 import shutil
-import imageio_ffmpeg
+from typing import Optional
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-# Configure FFmpeg path (Ensure local ffmpeg.exe is found)
-# Add current directory to PATH so 'ffmpeg' command works
+# Import internal modules (Ensure paths work)
+try:
+    from backend.config import settings
+    from backend.services.audio_service import AudioService
+    from backend.services.ai_service import AIService
+    from backend.utils.file_manager import FileManager
+except ImportError:
+    # Fallback if running directly from backend dir
+    from config import settings
+    from services.audio_service import AudioService
+    from services.ai_service import AIService
+    from utils.file_manager import FileManager
+
+# Configure FFmpeg path (Ensure local ffmpeg.exe is found for local dev)
+# For Docker, apt-get install ffmpeg handles this, but this line is safe
 os.environ["PATH"] += os.pathsep + os.path.dirname(os.path.abspath(__file__))
 
-from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional
-from backend.config import settings
-from backend.services.audio_service import AudioService
-from backend.services.ai_service import AIService
-from backend.utils.file_manager import FileManager
-
+# Initialize App
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
 
-# CORS Setup (Allow Frontend to connect)
+# CORS Setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174"], # Add your frontend port if different
+    allow_origins=["*"], # Allow all for simplicity in this setup
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/health")
 def health_check():
     return {"status": "healthy", "service": settings.PROJECT_NAME}
 
@@ -37,7 +47,6 @@ async def summarize_video(
 ):
     """
     Main endpoint to summarize video.
-    Accepts specific 'file' upload OR 'youtube_url' form field.
     """
     temp_files = [] # Track files to delete
     
@@ -70,7 +79,7 @@ async def summarize_video(
         # 2. Transcription (Whisper)
         transcript = AIService.transcribe_audio(audio_path)
         
-        # 3. Summarization (Gemini)
+        # 3. Summarization (Gemini/Groq/HF)
         summary = AIService.generate_summary(transcript)
 
         return {
@@ -86,8 +95,31 @@ async def summarize_video(
         
     finally:
         # 4. Cleanup
-        # We use background tasks or immediate cleanup. 
-        # Since we need to return the response, immediate cleanup is risky if async, 
-        # but here we can just do it.
         for path in temp_files:
-            FileManager.delete_file(path)
+            try:
+                if os.path.exists(path):
+                    os.remove(path)
+            except Exception:
+                pass
+
+# --- Serve Frontend Static Files (Deployment) ---
+# This comes LAST so API routes take precedence
+frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
+
+if os.path.exists(frontend_dist):
+    # Mount assets folder
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    
+    # Catch-all route for React Router
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        # Allow API routes to pass through (double check just in case)
+        if full_path.startswith("health") or full_path.startswith("summarize") or full_path.startswith("docs") or full_path.startswith("openapi"):
+             raise HTTPException(status_code=404) # Should have been caught by API routes
+            
+        file_path = os.path.join(frontend_dist, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+        # Fallback to index.html
+        return FileResponse(os.path.join(frontend_dist, "index.html"))

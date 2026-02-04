@@ -3,7 +3,6 @@ uvicorn==0.27.1
 python-dotenv==1.0.1
 openai-whisper
 setuptools-rust
-
 huggingface_hub
 yt-dlp
 moviepy==1.0.3

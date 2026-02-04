@@ -25,7 +25,8 @@ function App() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/summarize', {
+      // Use relative path (Vite proxy handles dev, FastAPI handles prod)
+      const response = await fetch('/summarize', {
         method: 'POST',
         body: formData,
       });
