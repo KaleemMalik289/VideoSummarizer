@@ -21,7 +21,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           # REPLACE 'kaleem' WITH YOUR HF USERNAME
           # REPLACE 'video-summarizer-backend' WITH YOUR SPACE NAME
-          HF_USERNAME: malikkaleem 
+          HF_USERNAME: malikKaleem 
           SPACE_NAME: VideoSummarizer
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
