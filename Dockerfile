@@ -43,10 +43,10 @@ RUN mkdir -p backend/temp backend/models
 RUN python backend/download_model.py
 
 # Expose the port
-EXPOSE 8000
+EXPOSE 7860
 
 # Start the application
 # We use a custom script or direct uvicorn command
 # For production, we need to serve frontend static files via FastAPI or Nginx
 # Here we'll modify main.py to serve static files, but for now, let's just run the backend
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
