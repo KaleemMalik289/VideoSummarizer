@@ -1,3 +1,14 @@
+---
+title: Video Summarizer
+emoji: 🎥
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+license: mit
+app_port: 7860
+---
+
 # Video Summarizer MVP
 
 This repository contains the source code for the Video Summarizer application.
