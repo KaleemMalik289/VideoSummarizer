@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
             <footer className="border-t border-[var(--border)] bg-[var(--bg-card)] py-8 transition-colors duration-300">
                 <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                     <p className="text-sm text-[var(--text-secondary)]">
-                        &copy; {new Date().getFullYear()} VideoDiscovery. All rights reserved.
+                        &copy; {new Date().getFullYear()} VideoSummarizer. All rights reserved.
                     </p>
                 </div>
             </footer>
