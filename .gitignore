@@ -28,3 +28,4 @@ backend/ffmpeg.exe
 # Logs
 *.log
 *.md
+config.bat

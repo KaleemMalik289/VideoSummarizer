@@ -4,7 +4,7 @@ python-dotenv==1.0.1
 openai-whisper
 setuptools-rust
 huggingface_hub
-yt-dlp
+yt-dlp>=2024.04.09
 moviepy==1.0.3
 python-multipart==0.0.9
 requests==2.31.0
