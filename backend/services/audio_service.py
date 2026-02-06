@@ -42,12 +42,18 @@ class AudioService:
                     'preferredcodec': 'mp3',
                     'preferredquality': '192',
                 }],
-                'outtmpl': temp_base_path, # yt-dlp will append .mp3
+                'outtmpl': temp_base_path,
                 'quiet': True,
                 'no_warnings': True,
-                # Critical for Cloud/Docker environments (Fixes [Errno -5])
-                'force_ipv4': True, 
+                # Critical Network Fixes for Cloud/Docker
+                'force_ipv4': True,
                 'nocheckcertificate': True,
+                'socket_timeout': 15,
+                'retries': 10,
+                # Simulate a real browser to avoid bot blocking/network drops
+                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                # Use Android client which is often more robust for Shorts/Cloud
+                'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
             }
 
             print(f"Downloading audio from {url}...")
