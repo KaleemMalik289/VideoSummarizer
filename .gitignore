@@ -1,8 +1,6 @@
 # Frontend
 node_modules/
 dist/
-.env
-.env.local
 .DS_Store
 coverage/
 .vscode/
@@ -28,3 +26,4 @@ backend/ffmpeg.exe
 # Logs
 *.log
 *.md
+config.bat
