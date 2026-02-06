@@ -45,6 +45,9 @@ class AudioService:
                 'outtmpl': temp_base_path, # yt-dlp will append .mp3
                 'quiet': True,
                 'no_warnings': True,
+                # Critical for Cloud/Docker environments (Fixes [Errno -5])
+                'force_ipv4': True, 
+                'nocheckcertificate': True,
             }
 
             print(f"Downloading audio from {url}...")
